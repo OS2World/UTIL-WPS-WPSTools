@@ -1,0 +1,187 @@
+OS/2 2.0 Workplace Shell Tools (tested with 6.304)
+by Ned Konz
+BIX: nkonz, CI$ 76046,223
+March 15, 1992
+
+================ BACKGROUND
+
+These programs are quick hacks which will let you play around with the WPS
+object creation. Note that you can get yourself into trouble with these;
+the system will let you make duplicate clocks, etc. which may be hard to
+get rid of, and I can't take any responsibility for your use of them.
+As with any program, you should read the source code before you use them
+if you're concerned about what they do.
+
+================ GETTING YOUR CLOCK BACK
+
+To get your clock back into the System Setup folder, use MAKEOBJ like this:
+
+    MAKEOBJ WPClock "System Clock" "<WP_CONFIG>"
+
+This will create a new clock in the System Setup folder, just like the
+original one.
+
+Don't run this more than once, or you'll end up with too many clocks
+(see next section). These can be hard to get rid of and can confuse the
+system, which expects to have only one.
+
+================ GETTING RID OF PESKY EXTRA CLOCKS
+
+I wrote these programs to experiment with the WPS object functions,
+and to get my System Clock back. I promptly made too many clocks and
+had to go through the following to get rid of them:
+
+(from command prompt)
+    mkdir c:\xyz
+
+(go to WP Shell, then:)
+    open new folder c:\xyz from Drives
+    move extra clocks into this folder
+    close the folder
+
+(from command prompt)
+    rmdir c:\xyz
+
+=============== THE PROGRAMS
+
+There are four executable files here:
+
+============== MAKEOBJ.EXE
+
+      usage:    MAKEOBJ Classname Title Location [SetupString]
+
+This creates a new Workplace Shell object (even new folders).
+See below for Classname, Location, and (optional) SetupString arguments.
+
+Examples:
+To make a new system clock in the system startup folder:
+
+    MAKEOBJ WPClock "System Clock" "<WP_CONFIG>"
+
+To make a template of a folder and put it on the desktop, using the icon
+which resides in c:\icons\xyz.ico
+    
+    MAKEOBJ WPFolder "My New Folder" "<WP_DESKTOP>" "TEMPLATE=YES,ICON=c:\icons\xyz.ico"
+
+============== MODOBJ.EXE
+
+      usage:    MODOBJ ObjID setupstring
+
+This modifies the attributes of an existing object if it can find it.
+
+ObjID is either an absolute path name or "<WP_xxx>" type location name.
+Probably others would work too, but I don't know their syntax.
+
+for SetupString, see below.
+
+============= DESTOBJ.EXE
+
+      usage:    DESTOBJ ObjID
+
+This destroys an object if it can find it. See MODOBJ for OBJID.
+Obviously, you can delete things which may be hard to put back. Be careful.
+
+============= ENUMAPP.EXE
+
+      usage:    ENUMAPP
+
+This lists the application/key pairs from both OS2.INI and OS2SYS.INI.
+The abstract objects (those without pathnames) live in the INI files;
+you might be able to learn something from their contents.
+
+=============== WPS LOCATIONS
+===============================================================================
+Some locations I've found (see \OS2\INI.RC for more)
+Physical                    Name                            Location ID     Type
+(on FAT system)
+===============================================================================
+\Nowhere                    Nowhere                         <WP_NOWHERE>    WPFolder
+\Desktop                    Desktop                         <WP_DESKTOP>    WPDesktop
+\Desktop\Template           Desktop->Templates              <WP_TEMPS>      WPTemplates
+\Desktop\Minimize           Desktop->Minimized Window Viewer  <WP_VIEWER>   WPMinWinViewer
+\Desktop\OS!2_Sys           Desktop->OS/2 System            <WP_OS2SYS>     WPFolder
+\Desktop\OS!2_Sys\Drives    Desktop->OS/2 System->Drives    <WP_DRIVES>     WPDrives
+\Desktop\OS!2_Sys\Startup   ... Startup                     <WP_START>      WPStartup
+\Desktop\OS!2_Sys\System_S  ... System Setup                <WP_CONFIG>     WPFolder
+
+other locations I found on my system (using enumapp.exe):
+
+<WP_NOWHERE>	 <WP_DESKTOP>	 <WP_TEMPS>	 <WP_VIEWER>	
+<WP_SHRED>	 <WP_MINDEX>	 <WP_INFO>	 <WP_NETWORK>	 <WP_STHR>	
+<WP_GLOSS>	 <WP_TUTOR>	 <WP_CMDREF>	 <WP_REXREF>	 <WP_OS2SYS>	
+<WP_DRIVES>	 <WP_START>	 <WP_CONFIG>	 <WP_CLOCK>	 <WP_KEYB>	
+<WP_INST>	 <WP_MOUSE>	 <WP_DDINST>	 <WP_MIGAPP>	 <WP_SOUND>	
+<WP_SYSTEM>	 <WP_CNTRY>	 <WP_FNTPAL>	 <WP_CLRPAL>	 <WP_SCHPAL>	
+<WP_SPOOL>	 <WP_PROMPTS>	 <WP_OS2FS>	 <WP_OS2WIN>	 <WP_DOSFS>	
+<WP_DOSWIN>	 <WP_WINFS>	 <WP_GAMES>	 <WP_KLDK>	 <WP_RVRSI>	
+<WP_SCRBL>	 <WP_NEKO>	 <WP_JIGSAW>	 <WP_CHESS>	 <WP_TOOLS>	
+<WP_EPM>	 <WP_SEEK>	 <WP_ICON>	 <WP_TERM>	 <WP_PULSE>	
+<WP_CHART>	 <WP_DCALC>	 <WP_DNOTE>	 <WP_DALARM>	 <WP_DCALEM>	
+<WP_DDARC>	 <WP_DDIARY>	 <WP_DLIST>	 <WP_DMNTH>	 <WP_DTARC>	
+<WP_TODO>	 <WP_TUNE>	 <WP_SPREAD>	 <WP_STICKY>	 <WP_DBASE>	
+<WP_CLIPV>	 <WP_PMDDE>	 <WP_PICV>	 <WP_SYSED>	
+
+============ SETUP STRINGS
+
+The setup string is a series of keyword=value pairs, separated by commas.
+For instance, if I wanted to make a template for a Folder using the icon
+in the file "c:\icons\folder.ico", I would use the setup string:
+
+	"TEMPLATE=YES,ICON=c:\icons\folder.ico,TITLE=My New Folder"
+==============================================================================
+These are the keyname-value pairs supported by the WPObject class: 
+
+ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³KEYNAME   ³VALUE     ³Description                             ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³TITLE     ³Title     ³This sets the object's title. This is   ³
+³          ³          ³equivalent to calling the wpSetTitle    ³
+³          ³          ³method.                                 ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³ICON      ³filename  ³This sets the object's icon. This is    ³
+³          ³          ³equivalent to calling the wpSetIconData ³
+³          ³          ³method.                                 ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³HELPPANEL ³id        ³This sets the object's default help     ³
+³          ³          ³panel. This is equivalent to calling the³
+³          ³          ³wpSetDefaultHelp method.                ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³TEMPLATE  ³YES       ³This sets the object's template         ³
+³          ³          ³property. This is equivalent to calling ³
+³          ³          ³the wpSetStyle method with a style of   ³
+³          ³          ³OBJSTYLE_TEMPLATE.                      ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³          ³NO        ³This resets the object's template       ³
+³          ³          ³property.                               ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³NODELETE  ³YES       ³This sets the object's no delete        ³
+³          ³          ³property. This is equivalent to calling ³
+³          ³          ³the wpSetStyle method with a style of   ³
+³          ³          ³OBJSTYLE_NODELETE.                      ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³          ³NO        ³This resets the object's no delete      ³
+³          ³          ³property.                               ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³NOCOPY    ³YES       ³This sets the object's no copy property.³
+³          ³          ³This is equivalent to calling the       ³
+³          ³          ³wpSetStyle method with a style of       ³
+³          ³          ³OBJSTYLE_NOCOPY.                        ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³          ³NO        ³This resets the object's no copy style. ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³NOMOVE    ³YES       ³This sets the object's no move property.³
+³          ³          ³This is equivalent to calling the       ³
+³          ³          ³wpSetStyle method with a style of       ³
+³          ³          ³OBJSTYLE_NOMOVE.                        ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³          ³NO        ³This resets the object's no move        ³
+³          ³          ³property.                               ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³NOLINK    ³YES       ³This sets the object's no link property.³
+³          ³          ³This is equivalent to calling the       ³
+³          ³          ³wpSetStyle method with a style of       ³
+³          ³          ³OBJSTYLE_NOLINK.                        ³
+ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³          ³NO        ³This resets the object's no link        ³
+³          ³          ³property.                               ³
+ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
